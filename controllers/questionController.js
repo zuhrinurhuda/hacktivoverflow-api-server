@@ -5,7 +5,7 @@ class QuestionController {
     let newQuestion = new Question({
       title: req.body.title,
       content: req.body.content,
-      author: req.body.author, // req.decoded._id,
+      author: req.decoded._id,
       slug: req.body.slug
     })
 
@@ -20,6 +20,7 @@ class QuestionController {
   static findAll (req, res) {
     Question.find()
     .populate(['author'])
+    .sort({ createdAt: 'desc' })
     .then(questions => res.status(200).json({
       message: 'Success find all questions',
       questions: questions
@@ -30,6 +31,7 @@ class QuestionController {
   static findById (req, res) {
     Question.findById(req.params.id)
     .populate(['author'])
+    .sort({ date: 'desc' })
     .then(question => res.status(200).json({
       message: 'Success find question',
       question: question
