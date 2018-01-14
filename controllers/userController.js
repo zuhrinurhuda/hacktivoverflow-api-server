@@ -2,7 +2,7 @@ const User = require('../models/userModel')
 const generateJwtToken = require('../helpers/generateJwtToken')
 
 class UserController {
-  static create (req, res) {
+  static signupOrLogin (req, res) {
     User.findOne({ email: req.body.email })
     .then(user => {
       if (user) {
