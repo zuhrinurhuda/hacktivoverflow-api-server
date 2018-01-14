@@ -1,18 +1,38 @@
 const User = require('../models/userModel')
+const generateJwtToken = require('../helpers/generateJwtToken')
 
 class UserController {
-  static create (req, res) {
-    let newUser = new User({
-      name: req.body.name, // facebook.name,
-      email: req.body.email, // facebook.email,
-      avatar: req.body.avatar // facebook.picture.data.url
-    })
+  static signupOrLogin (req, res) {
+    User.findOne({ email: req.body.email })
+    .then(user => {
+      if (user) {
+        // jika user sudah ada
+        generateJwtToken(user)
+        .then(jwtToken => res.status(200).json({
+          message: 'Login success!',
+          accesstoken: jwtToken
+        }))
+        .catch(err => res.status(500).send(err))
+      } else {
+        // jika user belum ada
+        let newUser = new User({
+          name: req.body.name,
+          email: req.body.email,
+          avatar: req.body.avatar
+        })
 
-    newUser.save()
-    .then(newUser => res.status(200).json({
-      message: 'Success create new user',
-      newUser: newUser
-    }))
+        newUser.save()
+        .then(newUser => {
+          generateJwtToken(newUser)
+          .then(jwtToken => res.status(200).json({
+            message: 'Login success!',
+            accesstoken: jwtToken
+          }))
+          .catch(err => res.status(500).send(err))
+        })
+        .catch(err => res.status(500).send(err))
+      }
+    })
     .catch(err => res.status(500).send(err))
   }
 
