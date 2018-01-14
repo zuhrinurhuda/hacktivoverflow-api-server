@@ -1,9 +1,9 @@
 const Answer = require('../models/answerModel')
 
 class AnswerController {
-  static create(req, res) {
+  static create (req, res) {
     let newAnswer = new Answer({
-      author: req.decoded._id,
+      author: req.body.author, // req.decoded._id,
       question: req.body.question,
       content: req.body.content
     })
@@ -16,8 +16,9 @@ class AnswerController {
     .catch(err => res.status(500).send(err))
   }
 
-  static findAll(req, res) {
+  static findAll (req, res) {
     Answer.find()
+    .populate(['author', 'question'])
     .then(answers => res.status(200).json({
       message: 'Success find all answers',
       answers: answers
@@ -25,7 +26,7 @@ class AnswerController {
     .catch(err => res.status(500).send(err))
   }
 
-  static findById(req, res) {
+  static findById (req, res) {
     Answer.findById(req.params.id)
     .then(answer => res.status(200).json({
       message: 'Success find answer',
@@ -34,7 +35,7 @@ class AnswerController {
     .catch(err => res.status(500).send(err))
   }
 
-  static update(req, res) {
+  static update (req, res) {
     Answer.findById(req.params.id)
     .then(answer => {
       answer.content = req.body.content || answer.content
@@ -48,7 +49,7 @@ class AnswerController {
     .catch(err => res.status(500).send(err))
   }
 
-  static delete(req, res) {
+  static delete (req, res) {
     Answer.findByIdAndRemove(req.params.id)
     .then(result => res.status(200).json({
       message: 'Success delete answer',

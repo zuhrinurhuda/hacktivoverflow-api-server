@@ -6,9 +6,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 
 mongoose.Promise = require('bluebird')
-mongoose
-  .connect(`mongodb://zuhri:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-shard-00-00-67zih.mongodb.net:27017,cluster0-shard-00-01-67zih.mongodb.net:27017,cluster0-shard-00-02-67zih.mongodb.net:27017/hacktivoverflow2?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`, { useMongoClient: true })
-  .catch(err => console.log(err))
+mongoose.connect(`mongodb://zuhri:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-shard-00-00-67zih.mongodb.net:27017,cluster0-shard-00-01-67zih.mongodb.net:27017,cluster0-shard-00-02-67zih.mongodb.net:27017/hacktivoverflow2?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`, { useMongoClient: true }).catch(err => console.log(err))
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -21,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 
 app.use('/', index)
-app.use('/users', users)
+app.use('/api/users', users)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

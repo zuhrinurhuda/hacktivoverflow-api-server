@@ -3,9 +3,9 @@ const User = require('../models/userModel')
 class UserController {
   static create (req, res) {
     let newUser = new User({
-      name: facebook.name,
-      email: facebook.email,
-      avatar: facebook.picture.data.url
+      name: req.body.name, // facebook.name,
+      email: req.body.email, // facebook.email,
+      avatar: req.body.avatar // facebook.picture.data.url
     })
 
     newUser.save()
