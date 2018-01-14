@@ -11,6 +11,7 @@ mongoose.connect(`mongodb://zuhri:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-s
 const index = require('./routes/index')
 const users = require('./routes/users')
 const questions = require('./routes/questions')
+const answers = require('./routes/answers')
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use(cors())
 app.use('/', index)
 app.use('/api/users', users)
 app.use('/api/questions', questions)
+app.use('/api/answers', answers)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
