@@ -38,8 +38,9 @@ class QuestionController {
   static update (req, res) {
     Question.findById(req.params.id)
     .then(question => {
-      question.name = req.body.name || question.name
-      question.avatar = req.body.avatar || question.avatar
+      question.title = req.body.title || question.title
+      question.content = req.body.content || question.content
+      question.slug = req.body.slug || question.slug
       question.save()
       .then(newQuestionData => res.status(200).json({
         message: 'Success update data question',
@@ -47,6 +48,7 @@ class QuestionController {
       }))
       .catch(err => res.status(500).send(err))
     })
+    .catch(err => res.status(500).send(err))
   }
 
   static delete (req, res) {
