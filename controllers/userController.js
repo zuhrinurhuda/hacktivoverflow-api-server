@@ -46,7 +46,7 @@ class UserController {
   }
 
   static findById (req, res) {
-    User.findById(req.params.id)
+    User.findById(req.decoded._id)
     .then(user => res.status(200).json({
       message: 'Success find user',
       user: user

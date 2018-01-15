@@ -61,12 +61,20 @@ class AnswerController {
   }
 
   static delete (req, res) {
-    Answer.findByIdAndRemove(req.params.id)
-    .then(result => res.status(200).json({
-      message: 'Success delete answer',
-      deletedAnswer: result
-    }))
-    .catch(err => res.status(500).send(err))
+    Answer.findById(req.params.id)
+      .then(answer => {
+        if (answer.author == req.decoded._id) {
+          Answer.findByIdAndRemove(req.params.id)
+          .then(result => res.status(200).json({
+            message: 'Success delete answer',
+            deletedAnswer: result
+          }))
+          .catch(err => res.status(500).send(err))
+        } else {
+          res.status(403).send('Forbidden')
+        }
+      })
+      .catch(err => res.status(500).send(err))
   }
 }
 
