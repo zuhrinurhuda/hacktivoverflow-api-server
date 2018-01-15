@@ -56,12 +56,20 @@ class QuestionController {
   }
 
   static delete (req, res) {
-    Question.findByIdAndRemove(req.params.id)
-    .then(result => res.status(200).json({
-      message: 'Success delete question',
-      deletedQuestion: result
-    }))
-    .catch(err => res.status(500).send(err))
+    Question.findById(req.params.id)
+      .then(question => {
+        if (question.author == req.decoded._id) {
+          Question.findByIdAndRemove(req.params.id)
+          .then(result => res.status(200).json({
+            message: 'Success delete question',
+            deletedQuestion: result
+          }))
+          .catch(err => res.status(500).send(err))
+        } else {
+          res.status(403).send('Forbidden')
+        }
+      })
+      .catch(err => res.status(500).send(err))
   }
 }
 
