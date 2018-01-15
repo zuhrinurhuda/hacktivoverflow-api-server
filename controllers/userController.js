@@ -5,12 +5,14 @@ class UserController {
   static signupOrLogin (req, res) {
     User.findOne({ email: req.body.email })
     .then(user => {
+      user.lastLogin = Date.now()
       if (user) {
         // jika user sudah ada
         generateJwtToken(user)
         .then(jwtToken => res.status(200).json({
           message: 'Login success!',
-          accesstoken: jwtToken
+          accesstoken: jwtToken,
+          user: user
         }))
         .catch(err => res.status(500).send(err))
       } else {
@@ -23,10 +25,12 @@ class UserController {
 
         newUser.save()
         .then(newUser => {
+          newUser.lastLogin = Date.now()
           generateJwtToken(newUser)
           .then(jwtToken => res.status(200).json({
             message: 'Login success!',
-            accesstoken: jwtToken
+            accesstoken: jwtToken,
+            user: newUser
           }))
           .catch(err => res.status(500).send(err))
         })
