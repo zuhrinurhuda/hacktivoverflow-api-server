@@ -46,6 +46,56 @@ class AnswerController {
     .catch(err => res.status(500).send(err))
   }
 
+  static upVote(req, res) {
+    Answer.findById(req.params.id)
+    .then(answer => {
+      let userUpVoteIndex = answer.upVoters.findIndex(element => element == req.decoded._id)
+      let userDownVoteIndex = answer.downVoters.findIndex(element => element == req.decoded._id)
+
+      if (userUpVoteIndex === -1 && userDownVoteIndex === -1) { // false && false
+        answer.upVoters.push(req.decoded._id)
+      } else if (userUpVoteIndex === -1 && userDownVoteIndex !== -1) { // false && true
+        answer.downVoters.splice(userDownVoteIndex, 1)
+        answer.upVoters.push(req.decoded._id)
+      } else if (userUpVoteIndex !== -1 && userDownVoteIndex === -1) { // true && false
+        answer.upVoters.splice(userUpVoteIndex, 1)
+      }
+
+      answer.save()
+      .then(newAnswerData => res.status(200).json({
+        message: 'Success vote answer',
+        updatedAnswer: newAnswerData
+      }))
+      .catch(err => res.status(500).send(err))
+    })
+    .catch(err => res.status(500).send(err))
+  }
+
+  static downVote(req, res) {
+    Answer.findById(req.params.id)
+    .then(answer => {
+      let userUpVoteIndex = answer.upVoters.findIndex(element => element == req.decoded._id)
+      let userDownVoteIndex = answer.downVoters.findIndex(element => element == req.decoded._id)
+
+      if (userDownVoteIndex === -1 && userUpVoteIndex === -1) { // false && false
+        answer.downVoters.push(req.decoded._id)
+      } else if (userDownVoteIndex === -1 && userUpVoteIndex !== -1) { // false && true
+        answer.upVoters.splice(userUpVoteIndex, 1)
+        answer.downVoters.push(req.decoded._id)
+      } else if (userDownVoteIndex !== -1 && userUpVoteIndex === -1) { // true && false
+        answer.downVoters.splice(userDownVoteIndex, 1)
+      }
+
+      answer.save()
+        .then(newAnswerData => res.status(200).json({
+          message: 'Success vote answer',
+          updatedAnswer: newAnswerData
+        }))
+        .catch(err => res.status(500).send(err))
+      })
+      .catch(err => res.status(500).send(err))
+  }
+
   static update (req, res) {
     Answer.findById(req.params.id)
     .then(answer => {
