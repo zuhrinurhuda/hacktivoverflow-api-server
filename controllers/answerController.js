@@ -3,7 +3,7 @@ const Answer = require('../models/answerModel')
 class AnswerController {
   static create (req, res) {
     let newAnswer = new Answer({
-      author: req.body.author, // req.decoded._id,
+      author: req.decoded._id,
       question: req.body.question,
       content: req.body.content
     })
@@ -16,9 +16,19 @@ class AnswerController {
     .catch(err => res.status(500).send(err))
   }
 
+  static findByQuestionId (req, res) {
+    Answer.find({ question: req.params.id })
+    .populate(['author'])
+    .then(answers => res.status(200).json({
+      message: 'Success find all answers',
+      answers: answers
+    }))
+    .catch(err => res.status(500).send(err))
+  }
+
   static findAll (req, res) {
     Answer.find()
-    .populate(['author', 'question'])
+    .populate(['author'])
     .then(answers => res.status(200).json({
       message: 'Success find all answers',
       answers: answers
@@ -28,6 +38,7 @@ class AnswerController {
 
   static findById (req, res) {
     Answer.findById(req.params.id)
+    .populate(['author'])
     .then(answer => res.status(200).json({
       message: 'Success find answer',
       answer: answer
