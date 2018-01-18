@@ -15,9 +15,7 @@ const questionSchema = new Schema({
     ref: 'users',
     required: true
   },
-  slug: {
-    type: String,
-  },
+  slugs: String,
   upVoters: [{
     type: Schema.Types.ObjectId,
     ref: 'users'
